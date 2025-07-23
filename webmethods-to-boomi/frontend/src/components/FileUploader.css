@@ -1,0 +1,146 @@
+.file-uploader {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.drop-zone {
+  border: 2px dashed #cbd5e0;
+  border-radius: 8px;
+  padding: 40px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: #f7fafc;
+}
+
+.drop-zone:hover {
+  border-color: #4299e1;
+  background-color: #ebf8ff;
+}
+
+.drop-zone.dragging {
+  border-color: #3182ce;
+  background-color: #bee3f8;
+}
+
+.drop-zone.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.drop-zone-content {
+  pointer-events: none;
+}
+
+.upload-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 16px;
+  color: #4299e1;
+}
+
+.drop-zone-text {
+  font-size: 16px;
+  color: #2d3748;
+  margin-bottom: 8px;
+}
+
+.file-types {
+  font-size: 14px;
+  color: #718096;
+}
+
+.selected-files {
+  margin-top: 24px;
+  background-color: #f7fafc;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.files-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.files-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #2d3748;
+}
+
+.clear-button {
+  background-color: #e53e3e;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.clear-button:hover:not(:disabled) {
+  background-color: #c53030;
+}
+
+.clear-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.file-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  background-color: white;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.file-name {
+  flex: 1;
+  font-size: 14px;
+  color: #2d3748;
+  word-break: break-word;
+}
+
+.file-size {
+  font-size: 12px;
+  color: #718096;
+  margin-left: 8px;
+}
+
+.remove-button {
+  background-color: transparent;
+  border: none;
+  color: #e53e3e;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+  transition: color 0.2s;
+}
+
+.remove-button:hover:not(:disabled) {
+  color: #c53030;
+}
+
+.remove-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
