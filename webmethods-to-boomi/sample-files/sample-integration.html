@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>webMethods Integration - Customer Data Sync</title>
+</head>
+<body>
+    <h1>Customer Data Synchronization Service</h1>
+    
+    <h2>Service Overview</h2>
+    <p>This service synchronizes customer data between Salesforce CRM and SAP ERP system.</p>
+    
+    <h3>Integration Flow</h3>
+    <ol>
+        <li>
+            <strong>Trigger:</strong> Salesforce Outbound Message
+            <ul>
+                <li>Event: Customer Create/Update</li>
+                <li>Protocol: SOAP over HTTPS</li>
+                <li>Authentication: Certificate-based</li>
+            </ul>
+        </li>
+        
+        <li>
+            <strong>Data Transformation:</strong>
+            <ul>
+                <li>Map Salesforce Account to SAP Customer Master</li>
+                <li>Field Mappings:
+                    <ul>
+                        <li>Account.Name → CUSTOMER.NAME1</li>
+                        <li>Account.BillingStreet → CUSTOMER.STREET</li>
+                        <li>Account.BillingCity → CUSTOMER.CITY</li>
+                        <li>Account.BillingPostalCode → CUSTOMER.POSTCODE</li>
+                        <li>Account.Phone → CUSTOMER.TELEPHONE</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        
+        <li>
+            <strong>SAP Integration:</strong>
+            <ul>
+                <li>Adapter: SAP Adapter using RFC</li>
+                <li>Function Module: Z_CREATE_UPDATE_CUSTOMER</li>
+                <li>Connection: SAP_ERP_PROD</li>
+                <li>Error Handling: Retry 3 times with exponential backoff</li>
+            </ul>
+        </li>
+        
+        <li>
+            <strong>Response Processing:</strong>
+            <ul>
+                <li>Success: Update Salesforce with SAP Customer Number</li>
+                <li>Failure: Send alert email and create error log</li>
+            </ul>
+        </li>
+    </ol>
+    
+    <h3>Technical Components</h3>
+    <ul>
+        <li>webMethods Package: CustomerIntegration</li>
+        <li>Main Flow Service: syncCustomerData</li>
+        <li>Error Handler Service: handleSyncError</li>
+        <li>Logging Service: logTransaction</li>
+        <li>Notification Service: sendAlertEmail</li>
+    </ul>
+    
+    <h3>Configuration</h3>
+    <pre>
+    SAP Connection Pool:
+    - Min Connections: 5
+    - Max Connections: 20
+    - Timeout: 30 seconds
+    
+    Salesforce Endpoint:
+    - URL: https://api.salesforce.com/services/Soap/c/v52.0
+    - Timeout: 60 seconds
+    
+    Error Email Recipients:
+    - integration-team@company.com
+    - sap-support@company.com
+    </pre>
+</body>
+</html>

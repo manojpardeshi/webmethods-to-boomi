@@ -1,0 +1,64 @@
+// Sample webMethods Flow Service
+// Service Name: OrderProcessingService
+// Package: com.example.integration
+
+// Input Pipeline
+// - orderData (IData)
+//   - orderId (String)
+//   - customerId (String)
+//   - items (IData[])
+//     - productId (String)
+//     - quantity (Integer)
+//     - price (Double)
+//   - totalAmount (Double)
+//   - orderDate (Date)
+
+// Service Steps:
+
+// 1. Validate Order Data
+BRANCH on '/orderData/orderId'
+  $null: SEQUENCE
+    MAP
+      // Set error message
+      errorMessage = "Order ID is required"
+    EXIT '$flow' and SIGNAL FAILURE
+
+// 2. Invoke SAP Adapter Service
+INVOKE pub.sap.client:invoke
+  // Map inputs
+  MAP
+    /orderData/orderId -> /sapRequest/OrderNumber
+    /orderData/customerId -> /sapRequest/CustomerNumber
+    /orderData/totalAmount -> /sapRequest/TotalValue
+  
+// 3. Transform SAP Response
+MAP
+  /sapResponse/Status -> /orderStatus
+  /sapResponse/DeliveryDate -> /estimatedDelivery
+
+// 4. Call REST API for Inventory Check
+INVOKE pub.client.http
+  URL = "https://api.inventory.com/check"
+  method = "POST"
+  data = orderData
+
+// 5. Process Response
+BRANCH on '/httpResponse/status'
+  200: SEQUENCE
+    MAP
+      "SUCCESS" -> /processingStatus
+  default: SEQUENCE
+    MAP
+      "FAILED" -> /processingStatus
+      /httpResponse/error -> /errorDetails
+
+// 6. Publish to JMS Queue
+INVOKE pub.jms:send
+  destinationName = "ORDER.PROCESSING.QUEUE"
+  JMSMessage = orderData
+
+// Output Pipeline
+// - processingStatus (String)
+// - orderStatus (String)
+// - estimatedDelivery (Date)
+// - errorDetails (String)
